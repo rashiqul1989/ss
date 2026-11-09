@@ -96,6 +96,14 @@ button.pr{background:var(--ac)}button.pr:hover{filter:brightness(1.1)}
 
 #s>.card:first-child{position:sticky;top:0;z-index:5}.rnv{display:inline-flex;gap:6px;align-items:center;margin-left:auto}.rnv small{color:var(--mu);min-width:4.5em}
 #res .hit.cur{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+/* ---- v3: Next/Previous-এ নির্বাচিত ফল জুম হয়ে উপরে উঠবে, বাকি সব ব্লার ---- */
+#res>*{transition:filter .3s ease,opacity .3s ease}
+#res .hit{position:relative;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease,filter .3s ease,opacity .3s ease,border-color .15s}
+#res.focus>*:not(.cur){filter:blur(2.2px);opacity:.55;user-select:none}
+#res.focus>.hit.cur{transform:translateY(-8px) scale(1.025);z-index:3;opacity:1;filter:none;
+ box-shadow:0 0 0 2px var(--ac),0 18px 36px -10px rgba(8,37,74,.45)}
+@media (prefers-reduced-motion:reduce){#res .hit,#res>*{transition:none}}
+#rr{padding:2px 9px;font-size:1rem;line-height:1.4;border-radius:8px}
 #lh th{cursor:pointer;user-select:none;white-space:nowrap}#lh th:hover{color:var(--tx)}#lh th::after{content:attr(data-a);color:var(--ac)}
 .smt{width:100%;border-collapse:collapse;background:var(--card)}
 .smt>thead>tr>th,.smt>tbody>tr>td{border:1px solid var(--bd);padding:8px;vertical-align:top;text-align:left;overflow-wrap:anywhere}
@@ -128,7 +136,7 @@ button.gh.dg:hover{background:var(--dg);color:#fff;border-color:var(--dg)}
 <label>কোথায় খুঁজবেন
 <select id="sc"><option value="b">আলোচ্যসূচী ও সিদ্ধান্ত</option><option value="a">শুধু আলোচ্যসূচী</option><option value="d">শুধু সিদ্ধান্ত</option></select></label>
 <label>সাজানো <select id="so"><option value="asc">পুরোনো থেকে নতুন</option><option value="desc">নতুন থেকে পুরোনো</option></select></label>
-<span class="rnv"><button class="gh" id="rp" title="আগের ফল" aria-label="আগের ফল">▲ Previous</button><button class="gh" id="rn" title="পরের ফল" aria-label="পরের ফল">▼ Next</button><small id="rc"></small></span>
+<span class="rnv"><button class="gh" id="rp" title="আগের ফল (Page Up / ↑)" aria-label="আগের ফল">▲ Previous</button><button class="gh" id="rn" title="পরের ফল (Page Down / ↓)" aria-label="পরের ফল">▼ Next</button><small id="rc"></small><button class="gh" id="rr" hidden title="রিসেট — সব ফল আবার স্বাভাবিক দেখান (Esc)" aria-label="রিসেট">↺</button></span>
 </div></div>
 <div class="tabs2"><button class="t2" data-p="pnU">⬆ আপলোড</button><button class="t2" data-p="pnR">📋 রেকর্ড</button><button class="t2" data-p="pnB">💾 ব্যাকআপ ও রিস্টোর</button></div>
 <div id="tp" hidden><div id="pnU" hidden><section id="u">
@@ -142,7 +150,7 @@ button.gh.dg:hover{background:var(--dg);color:#fff;border-color:var(--dg)}
 </section>
 
 
-</div><div id="pnB" hidden><div class="card" id="bk"><h2>ব্যাকআপ ও রিস্টোর</h2><div class="row"><button class="pr" id="bkb" title="Alt+B">💾 ব্যাকআপ নিন (Alt+B)</button><button class="gh" id="bkf">📁 ফোল্ডার বদলান</button><button class="gh" id="bkj" title="ফোল্ডার না বেছে সরাসরি ডাউনলোড">⬇ JSON ডাউনলোড</button><button class="gh" id="rsb">⬆ রিস্টোর করুন</button><button class="gh" id="bkh" title="পুরো টুলের কপি (HTML) — অনেক বড় ফাইল">🗂 পুরো টুল (HTML)</button></div><input type="file" id="rsf" accept=".json,application/json" hidden><div class="msg" id="bm" style="margin-top:6px">যেকোনো সময় Alt+B চাপলে সব সভার আপডেট (আপলোড করা বা প্রতিস্থাপিত সভা ও মুছে ফেলা রেকর্ড) একটি JSON ফাইলে E:\All Backup\Syndicate-Proceedings-Search ফোল্ডারে সংরক্ষিত হবে। ফাইলটি দিয়ে “⬆ রিস্টোর করুন” চাপলে সব আপডেট ফিরে আসবে। (Chrome/Edge)</div></div></div>
+</div><div id="pnB" hidden><div class="card" id="bk"><h2>ব্যাকআপ ও রিস্টোর</h2><div class="row"><button class="pr" id="bkb" title="Alt+B">💾 ব্যাকআপ নিন (Alt+B)</button><button class="gh" id="bkf">📁 ফোল্ডার বদলান</button><button class="gh" id="bkj">⬇ ডেটা (JSON)</button><button class="gh" id="rsb">⬆ রিস্টোর করুন</button></div><input type="file" id="rsf" accept=".json,application/json" hidden><div class="msg" id="bm" style="margin-top:6px">যেকোনো সময় Alt+B চাপলে পুরো টুল (আপলোড করা সভাসহ) E:\All Backup\Syndicate-Proceedings-Search ফোল্ডারে সংরক্ষিত হবে। (Chrome/Edge)</div></div></div>
 <div id="pnR" hidden><section id="l">
 <div class="card"><h2>সংরক্ষিত সভাসমূহ</h2><div class="tbw"><table><thead><tr id="lh"><th data-k="no" title="সভা অনুযায়ী সাজান">সভা</th><th data-k="date" title="তারিখ অনুযায়ী সাজান">তারিখ</th><th data-k="n" title="আলোচ্যসূচীর সংখ্যা অনুযায়ী সাজান">আলোচ্যসূচী</th><th data-k="src" title="উৎস অনুযায়ী সাজান">উৎস</th><th class="ac"></th></tr></thead><tbody id="lb"></tbody></table></div></div>
 </section>
@@ -220,7 +228,7 @@ function snippet(text,re){re.lastIndex=0;const m=re.exec(text);if(!m)return text
  const s=Math.max(0,m.index-90),e=Math.min(text.length,m.index+m[0].length+160);
  return(s>0?'… ':'')+text.slice(s,e)+(e<text.length?' …':'')}
 function search(){
- RC=-1;$('#rc').textContent='';
+ RC=-1;$('#rc').textContent='';$('#res').classList.remove('focus');$('#rr').hidden=true;
  const q=$('#q').value.trim(),res=$('#res');
  if(!q){res.innerHTML='';HITS=[];return}
  TOK=tokens(q);const sc=$('#sc').value;HITS=[];
@@ -372,17 +380,9 @@ function snapshot(){const s=SRC.replace(/<script type="application\/json" id="ex
  const ex=JSON.stringify(UP.map(m=>({...m,items:m.items.map(({s,a,d,ah,dh})=>({s,a,d,ah,dh}))}))).replace(/<\//g,'<\\/');
  const gn=JSON.stringify([...GONE].filter(n=>!UP.some(m=>m.no===n)));
  const k=s.indexOf('<script src="https://cdnjs');return k>0?s.slice(0,k)+'<script type="application/json" id="extra">'+ex+'<\/script>\n<script type="application/json" id="gone">'+gn+'<\/script>\n'+s.slice(k):s}
-/* ---------- ব্যাকআপ (JSON) ---------- */
-function cleanMeeting(m){const o={};for(const k in m)if(k[0]!=='_')o[k]=m[k];o.items=m.items.map(({s,a,d,ah,dh})=>({s,a,d,ah,dh}));return o}
-function backupData(){
- const meetings=UP.map(cleanMeeting),gone=[...GONE].filter(n=>!UP.some(m=>m.no===n)).sort((a,b)=>a-b);
- return {tool:TOOL,version:2,created:new Date().toISOString(),
-  note:'সিন্ডিকেট কার্যবিবরণী অনুসন্ধান — সব সভার আপডেটের ব্যাকআপ। ফিরিয়ে আনতে টুলের “ব্যাকআপ ও রিস্টোর” ট্যাবে “রিস্টোর করুন” চাপুন।',
-  summary:{base:BASE.length,uploaded:meetings.length,removed:gone.length,total:ALL.length},
-  gone,meetings}}
-function dlBlob(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
-async function saveBlob(name,blob,pick,info){
- if(!window.showDirectoryPicker){dlBlob(name,blob);toast('এই ব্রাউজার ফোল্ডারে সরাসরি সংরক্ষণ করতে পারে না (Chrome/Edge লাগবে)। ফাইলটি ডাউনলোড হয়েছে: '+name,true);bm('ডাউনলোড হয়েছে: '+name+(info?' — '+info:''),'ok');return}
+async function doBackup(pick){
+ const name=`${TOOL}_${stamp()}.html`,blob=new Blob([snapshot()],{type:'text/html'});
+ if(!window.showDirectoryPicker){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);toast('এই ব্রাউজার ফোল্ডারে সরাসরি সংরক্ষণ করতে পারে না (Chrome/Edge লাগবে)। ফাইলটি ডাউনলোড হয়েছে: '+name,true);return}
  try{let root=pick?null:await KV.get('root');
   if(root){let p=await root.queryPermission({mode:'readwrite'});if(p!=='granted')p=await root.requestPermission({mode:'readwrite'});if(p!=='granted')root=null}
   if(!root){toast('"All Backup" ফোল্ডারটি (E:\\All Backup) বেছে নিন — শুধু প্রথমবার লাগবে।');
@@ -391,46 +391,30 @@ async function saveBlob(name,blob,pick,info){
    await KV.set('root',root)}
   const dir=await root.getDirectoryHandle(TOOL,{create:true});
   const fh=await dir.getFileHandle(name,{create:true}),w=await fh.createWritable();await w.write(blob);await w.close();
-  toast('ব্যাকআপ সম্পন্ন: '+root.name+'\\'+TOOL+'\\'+name+(info?' — '+info:''));bm('সর্বশেষ ব্যাকআপ: '+name+(info?' — '+info:''),'ok')}
+  toast('ব্যাকআপ সম্পন্ন: '+root.name+'\\'+TOOL+'\\'+name);bm('সর্বশেষ ব্যাকআপ: '+name,'ok')}
  catch(e){if(e&&e.name==='AbortError')toast('ব্যাকআপ বাতিল করা হয়েছে।',true);else{await KV.set('root',null);toast('ব্যাকআপ ব্যর্থ ('+(e&&e.name||'ত্রুটি')+')। আবার Alt+B চেপে ফোল্ডার বেছে নিন।',true)}}}
-let BUSY=false;
-async function doBackup(pick,kind){
- if(BUSY)return;BUSY=true;
- try{
-  if(kind==='html'){await saveBlob(`${TOOL}_${stamp()}.html`,new Blob([snapshot()],{type:'text/html'}),pick,'পুরো টুল')}
-  else{const d=backupData();
-   await saveBlob(`${TOOL}_${stamp()}.json`,new Blob([JSON.stringify(d)],{type:'application/json'}),pick,
-    bn(d.meetings.length)+' টি আপলোড করা সভা, '+bn(d.gone.length)+' টি মুছে ফেলা রেকর্ড')}
- }finally{BUSY=false}}
-document.addEventListener('keydown',e=>{if(e.altKey&&!e.ctrlKey&&!e.metaKey&&(e.code==='KeyB'||e.key==='b'||e.key==='B')){e.preventDefault();if(!e.repeat)doBackup()}});
+document.addEventListener('keydown',e=>{if(e.altKey&&!e.ctrlKey&&!e.metaKey&&(e.code==='KeyB'||e.key==='b'||e.key==='B')){e.preventDefault();doBackup()}});
 function closeTabs(){document.querySelectorAll('.t2').forEach(x=>x.classList.remove('on'));$('#pnU').hidden=$('#pnR').hidden=$('#pnB').hidden=$('#tp').hidden=true;$('#res').hidden=false}
 document.querySelectorAll('.t2').forEach(b=>b.onclick=()=>{const on=b.classList.contains('on');closeTabs();if(!on){b.classList.add('on');$('#tp').hidden=false;$('#'+b.dataset.p).hidden=false;$('#res').hidden=true}});
-$('#bkb').onclick=()=>doBackup();$('#bkf').onclick=()=>doBackup(true);$('#bkh').onclick=()=>doBackup(false,'html');
+$('#bkb').onclick=()=>doBackup();$('#bkf').onclick=()=>doBackup(true);
 const TOOL='Syndicate-Proceedings-Search';
 function stamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');let h=d.getHours();const ap=h>=12?'PM':'AM';h=h%12||12;return `${p(d.getDate())}-${p(d.getMonth()+1)}-${d.getFullYear()}_${p(h)}-${p(d.getMinutes())}-${p(d.getSeconds())}_${ap}`}
 const bm=(x,c)=>{const e=$('#bm');e.className='msg '+c;e.textContent=x};
-$('#bkj').onclick=()=>{const d=backupData(),name=`${TOOL}_${stamp()}.json`;dlBlob(name,new Blob([JSON.stringify(d)],{type:'application/json'}));
- bm('ব্যাকআপ ফাইল: '+name+' — '+bn(d.meetings.length)+' টি আপলোড করা সভা, '+bn(d.gone.length)+' টি মুছে ফেলা রেকর্ড','ok')};
+$('#bkj').onclick=()=>{if(!UP.length&&!GONE.size){bm('ব্যাকআপ নেওয়ার মতো আপলোড করা সভা নেই।','er');return}
+ const data={tool:TOOL,version:1,created:new Date().toISOString(),gone:[...GONE].filter(n=>!UP.some(m=>m.no===n)),meetings:UP.map(m=>({...m,items:m.items.map(({s,a,d,ah,dh})=>({s,a,d,ah,dh}))}))};
+ const name=`${TOOL}_${stamp()}.json`,a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();
+ setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);bm('ব্যাকআপ ফাইল: '+name,'ok')};
 $('#rsb').onclick=()=>$('#rsf').click();
 $('#rsf').onchange=async()=>{const f=$('#rsf').files[0];$('#rsf').value='';if(!f)return;
- let j;try{j=JSON.parse(await f.text())}catch(e){bm('এটি বৈধ ব্যাকআপ ফাইল নয় (JSON পড়া যায়নি)।','er');return}
- if(!j||!Array.isArray(j.meetings)){bm('এটি এই টুলের ব্যাকআপ ফাইল নয়।','er');return}
- const good=[],bad=[];
- for(const m of j.meetings){if(m&&Number.isFinite(+m.no)&&Array.isArray(m.items)){m.no=+m.no;good.push(m)}else bad.push(m&&m.no!=null?m.no:'?')}
- const gone=(Array.isArray(j.gone)?j.gone:[]).map(Number).filter(Number.isFinite);
- if(!good.length&&!gone.length){bm('ব্যাকআপ ফাইলে ফিরিয়ে আনার মতো কোনো আপডেট নেই।','er');return}
- const rep=good.filter(m=>UP.some(x=>x.no===m.no)).length;
- if(!confirm(bn(good.length)+' টি সভা'+(gone.length?' ও '+bn(gone.length)+' টি মুছে ফেলা রেকর্ডের তালিকা':'')+' রিস্টোর করা হবে।'
-  +(rep?'\nএর মধ্যে '+bn(rep)+' টি সভা এখন আপলোড করা আছে — সেগুলো ব্যাকআপের কপি দিয়ে প্রতিস্থাপিত হবে।':'')
-  +'\nএখন আপলোড করা অন্য সভাগুলো অক্ষত থাকবে। এগিয়ে যাবেন?'))return;
- try{
-  for(const m of good){m.up=true;if(!m.src)m.src='ব্যাকআপ থেকে';prep(m);await DB.put(m);const i=UP.findIndex(x=>x.no===m.no);if(i>=0)UP[i]=m;else UP.push(m);GONE.delete(m.no)}
-  gone.forEach(n=>{if(!UP.some(x=>x.no===n))GONE.add(n)});await KV.set('gone',[...GONE]);
-  rebuild();if($('#q').value.trim())search();
-  bm('রিস্টোর সম্পন্ন: '+bn(good.length)+' টি সভা'+(gone.length?', '+bn(gone.length)+' টি মুছে ফেলা রেকর্ড':'')+(bad.length?' · বাদ পড়েছে (ত্রুটিপূর্ণ): '+bad.map(x=>bn(x)).join(', '):'')+'।','ok')}
- catch(e){bm('রিস্টোর ব্যর্থ হয়েছে: '+(e&&e.message||'অজানা ত্রুটি'),'er')}};
+ try{const j=JSON.parse(await f.text());if(!Array.isArray(j.meetings))throw 0;
+  if(!confirm(bn(j.meetings.length)+' টি সভা রিস্টোর করা হবে। একই নম্বরের আপলোড করা সভা প্রতিস্থাপিত হবে। এগিয়ে যাবেন?'))return;
+  for(const m of j.meetings){m.up=true;prep(m);await DB.put(m);const i=UP.findIndex(x=>x.no===m.no);if(i>=0)UP[i]=m;else UP.push(m);GONE.delete(m.no)}
+  if(Array.isArray(j.gone))j.gone.forEach(n=>{if(!UP.some(x=>x.no===n))GONE.add(n)});await KV.set('gone',[...GONE]);
+  rebuild();if($('#q').value.trim())search();bm('রিস্টোর সম্পন্ন: '+bn(j.meetings.length)+' টি সভা।','ok')}
+ catch(e){bm('এটি বৈধ ব্যাকআপ ফাইল নয়।','er')}};
 let RC=-1;
-function stepRes(d){const cs=[...document.querySelectorAll('#res .hit')],n=cs.length;if(!n)return;RC=RC<0?(d>0?0:n-1):(RC+d+n)%n;cs.forEach(c=>c.classList.remove('cur'));const c=cs[RC];c.classList.add('cur');const bar=$('#s>.card:first-child');c.style.scrollMarginTop=(bar?bar.offsetHeight+12:12)+'px';c.scrollIntoView({block:'start',behavior:'smooth'});$('#rc').textContent=bn(RC+1)+' / '+bn(n)+(HITS.length>n?'+':'')}
+function stepRes(d){const cs=[...document.querySelectorAll('#res .hit')],n=cs.length;if(!n)return;RC=RC<0?(d>0?0:n-1):(RC+d+n)%n;cs.forEach(c=>c.classList.remove('cur'));const c=cs[RC];c.classList.add('cur');const bar=$('#s>.card:first-child');$('#res').classList.add('focus');$('#rr').hidden=false;{const bb=bar?bar.getBoundingClientRect().bottom:0,vh=innerHeight-bb,h=c.offsetHeight,r=c.getBoundingClientRect();
+  const want=h+24>=vh?bb+14:bb+(vh-h)/2;scrollBy({top:r.top-want,behavior:'smooth'})}$('#rc').textContent=bn(RC+1)+' / '+bn(n)+(HITS.length>n?'+':'')}
 $('#rp').onclick=()=>stepRes(-1);$('#rn').onclick=()=>stepRes(1);
 let PEND=[];let LS={k:'no',d:-1};
 function sortedAll(){const v={no:m=>m.no,date:m=>m.date||'',n:m=>m.items.length,src:m=>(m.up?'1':'0')+(m.src||'')}[LS.k];return [...ALL].sort((a,b)=>{const x=v(a),y=v(b);return (x<y?-1:x>y?1:a.no-b.no)*LS.d})}
@@ -465,6 +449,17 @@ const dz=$('#dz'),fi=$('#fi');dz.onclick=()=>fi.click();fi.onchange=()=>{handleF
 ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('ov')}));
 ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('ov')}));
 dz.addEventListener('drop',e=>handleFiles([...e.dataTransfer.files]));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#rd').classList.contains('on')&&!$('#sm').classList.contains('on')&&$('#res').classList.contains('focus'))resetRes()},true);
+document.addEventListener('keydown',e=>{
+ if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||e.isComposing)return;
+ const d={ArrowDown:1,PageDown:1,ArrowUp:-1,PageUp:-1}[e.key];if(!d)return;
+ if($('#rd').classList.contains('on')||$('#sm').classList.contains('on')||$('#res').hidden)return;
+ const t=e.target&&e.target.tagName;if(t==='SELECT'||t==='TEXTAREA')return;
+ if(!document.querySelector('#res .hit'))return;
+ e.preventDefault();stepRes(d)});
+function resetRes(){$('#res').classList.remove('focus');document.querySelectorAll('#res .hit.cur').forEach(c=>c.classList.remove('cur'));RC=-1;$('#rr').hidden=true;
+ $('#rc').textContent=HITS.length?bn(Math.min(HITS.length,300))+' টি ফল':'';scrollTo({top:0,behavior:'smooth'})}
+$('#rr').onclick=resetRes;
 init();
 </script>
 </body>
