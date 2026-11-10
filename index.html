@@ -136,12 +136,28 @@ button.gh.dg:hover{background:var(--dg);color:#fff;border-color:var(--dg)}
 .pmc button{padding:7px 14px}
 #pmm{margin:0;padding:6px 14px;background:var(--card);border-bottom:1px solid var(--bd);min-height:2.2em}
 .pmb{flex:1;min-height:0}#pmf{width:100%;height:100%;border:0;background:#777;display:block}
+/* ---- v5: বাম পাশের মেনু কার্ড (আপলোড / রেকর্ড / ব্যাকআপ) ---- */
+.wrap2{display:grid;grid-template-columns:210px minmax(0,1fr);gap:16px;max-width:1360px;align-items:start}
+.mainc{min-width:0}
+.side{position:sticky;top:12px;align-self:start}
+.side .tabs2{display:flex;flex-direction:column;gap:6px;margin:0;padding:10px}
+.side .t2{width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:11px 14px;font-weight:600;display:flex;gap:8px;align-items:center}
+.side .t2:hover{background:var(--ac2);color:var(--ac)}
+.side .t2.on{background:var(--ac);color:#fff}
+/* ---- v6: পুরো স্ক্রিন জুড়ে লেআউট ---- */
+.top .in{max-width:none;padding:14px 20px}
+.wrap2{max-width:none;margin:0;padding:14px 20px;grid-template-columns:230px minmax(0,1fr)}
+.side{top:12px}
+.side .tabs2{min-height:calc(100vh - 140px);align-content:flex-start}
+@media(max-width:800px){.wrap2{grid-template-columns:1fr}.side{position:static}.side .tabs2{min-height:0;flex-direction:row;flex-wrap:wrap}.side .t2{width:auto;flex:1 1 auto;justify-content:center}}
 </style>
 </head>
 <body>
 <header class="top"><div class="in"><div><h1>সিন্ডিকেট কার্যবিবরণী অনুসন্ধান</h1><p class="sub" id="stat"></p></div>
 <div class="cr"><b>Crafted with ❤️ by Md. Rashiqul Islam</b><br>Registrar Office, DUET, Gazipur.<br>E-mail : <a href="mailto:rasikul@duet.ac.bd">rasikul@duet.ac.bd</a>, Cell : <a href="tel:01722044842">01722-044842</a></div></div></header>
 <div class="wrap2">
+<aside class="side" aria-label="মেনু"><div class="card tabs2"><button class="t2" data-p="pnU">⬆ আপলোড</button><button class="t2" data-p="pnR">📋 রেকর্ড</button><button class="t2" data-p="pnB">💾 ব্যাকআপ ও রিস্টোর</button></div></aside>
+<main class="mainc">
 <div class="card" id="s">
 <div class="sb"><input type="search" id="q" placeholder="যেকোনো শব্দ লিখুন (একাধিক শব্দ দিলে সবগুলো আছে এমন ফল দেখাবে)" autocomplete="off"><button class="pr" id="go">খুঁজুন</button></div>
 <div class="opts">
@@ -150,7 +166,6 @@ button.gh.dg:hover{background:var(--dg);color:#fff;border-color:var(--dg)}
 <label>সাজানো <select id="so"><option value="asc">পুরোনো থেকে নতুন</option><option value="desc">নতুন থেকে পুরোনো</option></select></label>
 <span class="rnv"><button class="gh" id="rp" title="আগের ফল (Page Up / ↑)" aria-label="আগের ফল">▲ Previous</button><button class="gh" id="rn" title="পরের ফল (Page Down / ↓)" aria-label="পরের ফল">▼ Next</button><small id="rc"></small><button class="gh" id="rr" hidden title="রিসেট — সব ফল আবার স্বাভাবিক দেখান (Esc)" aria-label="রিসেট">↺</button></span>
 </div></div>
-<div class="tabs2"><button class="t2" data-p="pnU">⬆ আপলোড</button><button class="t2" data-p="pnR">📋 রেকর্ড</button><button class="t2" data-p="pnB">💾 ব্যাকআপ ও রিস্টোর</button></div>
 <div id="tp" hidden><div id="pnU" hidden><section id="u">
 <div class="card">
 <div class="drop" id="dz"><div style="font-size:1.05rem;color:var(--tx)">কার্যবিবরণীর .docx ফাইল এখানে ছাড়ুন বা ক্লিক করে বেছে নিন</div>
@@ -168,6 +183,7 @@ button.gh.dg:hover{background:var(--dg);color:#fff;border-color:var(--dg)}
 </section>
 </div></div>
 <div id="res"></div>
+</main>
 </div>
 
 <div id="pdfm"><div class="pmh"><b id="pmt"></b><span style="flex:1"></span><button class="gh" id="pmx">বন্ধ</button></div>
@@ -503,51 +519,14 @@ async function pdLoad(no){
  if(!h)return null;
  if(PD.c&&PD.c.full)URL.revokeObjectURL(PD.c.full);PD.c=null;
  const file=await h.getFile(),bytes=new Uint8Array(await file.arrayBuffer());
- const c={no,name:h.name,doc:null,total:0,bytes,tx:null};
+ const c={no,name:h.name,doc:null,total:0};
  if(window.PDFLib){c.doc=await PDFLib.PDFDocument.load(bytes,{ignoreEncryption:true,updateMetadata:false});c.total=c.doc.getPageCount()}
  c.full=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
  PD.c=c;return c}
-function pdGuess(m,idx,total){if(!total)return 3;const w=m.items.map(i=>200+(i.a||'').length+(i.d||'').length);let all=0,pre=0;w.forEach((x,k)=>{all+=x;if(k<idx)pre+=x});return Math.max(2,Math.min(total,Math.round(2+(total-2)*pre/Math.max(1,all))))}
+function pdGuess(m,idx,total){if(!total)return 3;const n=Math.max(1,m.items.length);return Math.max(2,Math.min(total,Math.round(2+(total-2)*idx/n)))}
 function setRange(f,t){$('#pf').value=f;$('#pt').value=t}
 function pdFull(p){if(!PD.c)return;PD.shown='full';pdFrame(PD.c.full+'#page='+(p||1))}
 function pdMark(no,idx){document.querySelectorAll('.pdfb[data-pdf="'+no+'"][data-pi="'+idx+'"]').forEach(b=>{if(!b.textContent.includes('✓'))b.textContent+=' ✓'})}
-
-/* ---------- PDF-এর লেখা পড়ে আলোচ্যসূচীর আসল পৃষ্ঠা খোঁজা ---------- */
-let PJ=null;const PJV='3.11.174',PJU='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/'+PJV+'/';
-function loadPdfJs(){if(window.pdfjsLib)return Promise.resolve();
- return PJ||(PJ=new Promise((res,rej)=>{const s=document.createElement('script');s.src=PJU+'pdf.min.js';s.onload=res;s.onerror=()=>{PJ=null;rej(new Error('pdf.js লোড হয়নি (ইন্টারনেট লাগে)'))};document.head.appendChild(s)}).then(async()=>{
-  try{const r=await fetch(PJU+'pdf.worker.min.js');pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([await r.text()],{type:'text/javascript'}))}
-  catch(e){pdfjsLib.GlobalWorkerOptions.workerSrc=PJU+'pdf.worker.min.js'}}))}
-const pxN=s=>String(s||'').normalize('NFC').replace(/[^অ-হড়-য়]/g,'');
-const pxT=n=>{const t=new Set();for(let i=0;i+3<=n.length;i++)t.add(n.substr(i,3));return t};
-const pxS=(t,pt)=>{if(t.size<8)return -1;let k=0;t.forEach(x=>{if(pt.has(x))k++});return k/t.size};
-async function pdTexts(c){
- if(c.tx)return c.tx;
- await loadPdfJs();
- const doc=await pdfjsLib.getDocument({data:c.bytes.slice(),isEvalSupported:false}).promise,arr=[];
- for(let p=1;p<=doc.numPages;p++){
-  if(p%5===1)pm('PDF-এর লেখা পড়ে পৃষ্ঠা খোঁজা হচ্ছে… ('+bn(p)+'/'+bn(doc.numPages)+')','');
-  const pg=await doc.getPage(p),tc=await pg.getTextContent(),raw=tc.items.map(i=>i.str).join(' '),nm=pxN(raw);
-  arr.push({raw,len:nm.length,tri:pxT(nm)})}
- try{doc.destroy()}catch(e){}
- c.tx=arr;return arr}
-function pdItemPage(tx,it){
- const tA=pxT(pxN((it.a||'').slice(0,300))),tD=pxT(pxN((it.d||'').slice(0,250)));
- const re=it.s?new RegExp('সূচী\\s*[-–—:.]?\\s*'+String(it.s).trim().replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![০-৯])'):null;
- let best=null;
- tx.forEach((p,i)=>{
-  const a=pxS(tA,p.tri);if(a<0)return;const d=pxS(tD,p.tri);
-  let sc=d<0?a:0.6*a+0.4*d;if(re&&re.test(p.raw))sc+=0.15;
-  if(!best||sc>=best.sc)best={p:i+1,sc}});
- return best}
-async function pdLocate(c,m,idx){
- const tx=await pdTexts(c);
- if(!tx.length||tx.reduce((s,p)=>s+p.len,0)<tx.length*40)return null; // স্ক্যান করা ছবি — লেখা নেই
- const a=pdItemPage(tx,m.items[idx]);
- if(!a||a.sc<0.35)return null;
- let t=a.p;const nx=idx+1<m.items.length?pdItemPage(tx,m.items[idx+1]):null;
- if(nx&&nx.sc>=0.35&&nx.p>a.p)t=Math.min(nx.p,a.p+10);
- return{f:a.p,t,sc:a.sc}}
 async function openPdf(no,idx){
  const m=ALL.find(x=>x.no===no);
  try{
@@ -563,15 +542,10 @@ async function openPdf(no,idx){
   if(sv){setRange(sv.f,sv.t);await pdPreview()}
   else{
    const g=idx>=0&&m?pdGuess(m,idx,c.total):1;setRange(g,g);pdFull(g);
-   let loc=null,why='';
-   if(idx>=0&&m){pm('PDF-এর লেখা পড়ে আলোচ্যসূচীর পৃষ্ঠা খোঁজা হচ্ছে…','');
-    try{loc=await pdLocate(c,m,idx)}catch(e){why=String(e&&e.message||e);console.warn(e)}
-    if(!$('#pdfm').classList.contains('on')||PD.c!==c||PD.idx!==idx)return}
-   if(loc){setRange(loc.f,loc.t);await pdPreview(true)}
-   else pm(idx>=0?'পুরো PDF দেখানো হচ্ছে (আনুমানিক পৃষ্ঠা '+bn(g)+'-এ)।'+(why?' স্বয়ংক্রিয় খোঁজা হয়নি: '+why+'।':' PDF-এ পড়ার মতো লেখা পাওয়া যায়নি বা মিল পাওয়া যায়নি।')+' আপনার আলোচ্যসূচীটি যে পৃষ্ঠায় আছে, উপরের ঘরে সেই পৃষ্ঠা নম্বর লিখে "প্রিভিউ" চাপুন — নম্বরটি মনে রাখা হবে, পরের বার সরাসরি ওই অংশ দেখাবে।':'পুরো PDF দেখানো হচ্ছে। প্রিন্টের জন্য পৃষ্ঠা নম্বর লিখে "প্রিভিউ" বা "প্রিন্ট" চাপুন।','')}
+   pm(idx>=0?'পুরো PDF দেখানো হচ্ছে (আনুমানিক পৃষ্ঠা '+bn(g)+'-এ)। আপনার আলোচ্যসূচীটি যে পৃষ্ঠায় আছে, উপরের ঘরে সেই পৃষ্ঠা নম্বর লিখে "প্রিভিউ" চাপুন — নম্বরটি মনে রাখা হবে, পরের বার সরাসরি ওই অংশ দেখাবে।':'পুরো PDF দেখানো হচ্ছে। প্রিন্টের জন্য পৃষ্ঠা নম্বর লিখে "প্রিভিউ" বা "প্রিন্ট" চাপুন।','')}
  }catch(e){if(e&&e.name==='AbortError'){toast('ফোল্ডার বাছাই বাতিল করা হয়েছে।',true);return}
   pm('ত্রুটি: '+(e&&e.message||e),'er');$('#pdfm').classList.contains('on')||toast('PDF খোলা যায়নি: '+(e&&e.message||e),true)}}
-async function pdPreview(auto){
+async function pdPreview(){
  const c=PD.c;if(!c)return false;
  const f=parseInt($('#pf').value);let t=parseInt($('#pt').value);
  if(!f||f<1){pm('"থেকে" ঘরে পৃষ্ঠা নম্বর লিখুন।','er');return false}
@@ -589,8 +563,8 @@ async function pdPreview(auto){
   if(PD.pv)URL.revokeObjectURL(PD.pv);
   PD.pv=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
   PD.shown='pv';pdFrame(PD.pv);
-  if(PD.idx>=0&&!auto){RNG[PD.key]={f,t:to};await KV.set('rng',RNG);pdMark(PD.no,PD.idx)}
-  pm((cv&&f>1?'প্রথম পাতা + ':'')+'পৃষ্ঠা '+bn(f)+(to>f?'–'+bn(to):'')+' (মোট '+bn(ix.length)+' পৃষ্ঠা) — প্রিন্টের জন্য প্রস্তুত।'+(PD.idx>=0?(auto?' (PDF-এর লেখা মিলিয়ে স্বয়ংক্রিয়ভাবে খুঁজে পাওয়া — ঠিক না হলে পৃষ্ঠা নম্বর বদলে "প্রিভিউ" চাপুন, তখন মনে রাখা হবে।)':' পৃষ্ঠা নম্বর মনে রাখা হয়েছে।'):''),'ok');
+  if(PD.idx>=0){RNG[PD.key]={f,t:to};await KV.set('rng',RNG);pdMark(PD.no,PD.idx)}
+  pm((cv&&f>1?'প্রথম পাতা + ':'')+'পৃষ্ঠা '+bn(f)+(to>f?'–'+bn(to):'')+' (মোট '+bn(ix.length)+' পৃষ্ঠা) — প্রিন্টের জন্য প্রস্তুত।'+(PD.idx>=0?' পৃষ্ঠা নম্বর মনে রাখা হয়েছে।':''),'ok');
   return true
  }catch(e){pm('PDF তৈরি করা যায়নি: '+(e&&e.message||e),'er');return false}}
 async function pdPrint(){
